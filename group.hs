@@ -3,7 +3,7 @@ import System.Environment (getArgs)
 import System.Directory
 
 
-move dir file = renameFile file (dir ++ "/" ++ file)
+move dir file = renamePath file (dir ++ "/" ++ file)
 
 group args =
   let dir = last args
