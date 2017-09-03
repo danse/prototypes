@@ -19,3 +19,8 @@ executable group
   main-is:             group.hs
   build-depends:       base >=4.8 && <4.9, directory
   default-language:    Haskell2010
+
+executable tag
+  main-is:             tag.hs
+  build-depends:       base >=4.8 && <4.9, directory
+  default-language:    Haskell2010
