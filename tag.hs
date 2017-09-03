@@ -1,4 +1,4 @@
-{-#
+{-
     
     ~ $ tag-ingest "file name"
     tags/.contents/"file name"/links
@@ -25,7 +25,7 @@
     tags/
     tags/.contents/
 
-#-}
+-}
 
 import System.Environment (getArgs)
 import System.Directory (createDirectoryIfMissing, copyFile, removeFile)
