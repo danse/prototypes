@@ -1,5 +1,13 @@
 {-
     
+  tag a-1 a-2 a
+  tag b-1 tags/a/a-1 1
+
+  that's in order to avoid the proliferation of tags. it's going to be
+  better for now. later i might want a multitag command
+
+  lines below are old
+
     ~ $ tag-ingest "file name"
     tags/.contents/"file name"/links
     tags/.contents/"file name"/content
@@ -28,21 +36,24 @@
 -}
 
 import System.Environment (getArgs)
-import System.Directory (createDirectoryIfMissing, copyFile, removeFile)
+import System.Directory (createDirectoryIfMissing, copyFile, removeFile, getCurrentDirectory)
+import System.FilePath.Posix (takeFileName)
 
 copyTo file dir = do
   createDirectoryIfMissing True dir
-  copyFile file (dir ++ "/" ++ file)
+  copyFile file (dir ++ "/" ++ (takeFileName file))
 
-singleTag file tag = copyTo file ("tags/" ++ tag ++ "/")
+singleTag tag file = do
+  curr <- getCurrentDirectory
+  copyTo file (curr ++ "/tags/" ++ tag ++ "/")
 
 tag :: [String] -> IO ()
 tag args = 
-  let tags = init args
-      fileName = last args
+  let files = init args
+      tag = last args
   in do
-    sequence (map (singleTag fileName) tags)
-    removeFile fileName
+    sequence (map (singleTag tag) files)
+    return ()
 
 main = do
     args <- getArgs
