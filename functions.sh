@@ -2,5 +2,6 @@
 # your `~/.bashrc`
 hakyllPostTitle () { echo $(date -Idate)-post-${1:-1}.md; }
 gitSave () { git commit -am "$(date)"; }
-shameless () { touch "$*" && git add "$*" && gitSave && clear; }
+fileAndForget () { gitSave && git push ; clear; }
+shameless () { touch "$*" && git add "$*" && fileAndForget; }
 shy () { touch "$*" && clear; }
