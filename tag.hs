@@ -38,14 +38,15 @@
 import System.Environment (getArgs)
 import System.Directory (createDirectoryIfMissing, copyFile, removeFile, getCurrentDirectory)
 import System.FilePath.Posix (takeFileName)
+import System.Posix.Files (createLink)
 
-copyTo file dir = do
+link file dir = do
   createDirectoryIfMissing True dir
-  copyFile file (dir ++ "/" ++ (takeFileName file))
+  createLink file (dir ++ "/" ++ (takeFileName file))
 
 singleTag tag file = do
   curr <- getCurrentDirectory
-  copyTo file (curr ++ "/tags/" ++ tag ++ "/")
+  link file (curr ++ "/tags/" ++ tag ++ "/")
 
 tag :: [String] -> IO ()
 tag args = 
