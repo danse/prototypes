@@ -15,12 +15,11 @@ build-type:          Simple
 extra-source-files:  ChangeLog.md
 cabal-version:       >=1.10
 
-executable group
-  main-is:             group.hs
-  build-depends:       base >=4.8 && <4.9, directory
-  default-language:    Haskell2010
-
 executable tag
   main-is:             tag.hs
-  build-depends:       base >=4.8 && <4.9, directory, filepath, unix
+  build-depends:       base >=4.8 && <4.9,
+                       directory,
+                       filepath,
+                       unix,
+                       optparse-applicative
   default-language:    Haskell2010
