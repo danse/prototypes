@@ -5,3 +5,4 @@ gitSave () { git commit -am "$(date)"; }
 fileAndForget () { gitSave && git push ; clear; }
 clay () { touch "$*" && git add "$*" && fileAndForget; }
 clayShy () { touch "$*" && clear; }
+step () { ls -1t; }
