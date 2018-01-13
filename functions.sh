@@ -6,3 +6,5 @@ fileAndForget () { gitSave && git push ; clear; }
 clay () { touch "$*" && git add "$*" && fileAndForget; }
 clayShy () { touch "$*" && clear; }
 step () { ls -1t; }
+# easily grep on file names
+gaga () { find -iname "*$@*"; }
