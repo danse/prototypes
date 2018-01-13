@@ -2,6 +2,7 @@
 
 
 {-# LANGUAGE OverloadedStrings #-}
+{-
 import System.Environment (getArgs)
 import System.Directory (renamePath)
 
@@ -18,3 +19,6 @@ group args =
 main = do
   args <- getArgs
   group args
+
+-}
+main = putStrLn "renamePath does not seem to be there?"

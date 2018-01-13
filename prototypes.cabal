@@ -23,3 +23,16 @@ executable tag
                        unix,
                        optparse-applicative
   default-language:    Haskell2010
+
+executable group
+  main-is:             group.hs
+  build-depends:       base >=4.8 && <4.9,
+                       directory
+  default-language:    Haskell2010
+
+executable nest
+  main-is:             nest.hs
+  build-depends:       base >=4.8 && <4.9,
+                       directory,
+                       temporary
+  default-language:    Haskell2010
