@@ -8,3 +8,4 @@ clayShy () { touch "$*" && clear; }
 step () { ls -1t; }
 # easily grep on file names
 gaga () { find -iname "*$@*"; }
+allGit () { ls -d */.git | while read d; do d="${d%/.git}"; cd $d; git $@; cd ../; done }
