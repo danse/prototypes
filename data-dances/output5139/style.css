@@ -1,0 +1,17 @@
+path.domain {
+    stroke: black;
+    fill: none;
+}
+circle {
+    fill-opacity: 0.5;
+}
+circle.positive {
+    fill: steelblue;
+}
+circle.negative {
+    fill: orange;
+}
+circle:hover {
+    stroke: black;
+    stroke-width: 2;
+}
