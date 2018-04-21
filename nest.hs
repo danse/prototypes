@@ -1,5 +1,11 @@
 {-
 
+mv arg /tmp/timestamped
+mkdir arg
+mv /tmp/timestamped arg
+
+----
+
 given a file, nests it into a directory with the same name
 
 $ touch name
