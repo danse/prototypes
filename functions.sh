@@ -22,3 +22,24 @@ abs() {
     cd - >/dev/null
     echo $ABS_PATH
 } # from http://jeetworks.org/node/98
+buildExistingSphinx () {
+    tee conf.py <<EOF
+extensions = []
+source_suffix = '.rst'
+master_doc = 'index'
+language = 'it'
+pygments_style = 'sphinx'
+html_theme = 'alabaster'
+html_static_path = ['_static']
+htmlhelp_basename = 'previewdoc'
+EOF
+    sphinx-build . web
+    firefox web/index.html &
+}
+taggedCount () {
+    ls | while read dir; do echo -n "$dir "; ls "$dir" | wc -l; done
+}
+taggedFind () {
+    b=$(basename "$@")
+    find -name "$b"
+}
