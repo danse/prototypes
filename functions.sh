@@ -43,3 +43,4 @@ taggedFind () {
     b=$(basename "$@")
     find -name "$b"
 }
+function gitCheck () { cd $@ && git status && git branch && cd -; }
