@@ -45,3 +45,4 @@ taggedFind () {
 }
 function gitCheck () { cd $@ && git status && git branch && cd -; }
 function trim () { echo "removes spaces from the right side -- prototypes/functions.sh"; }
+function github-clone { git clone "git@github.com:${@}.git"; }
