@@ -45,4 +45,8 @@ taggedFind () {
 }
 function gitCheck () { cd $@ && git status && git branch && cd -; }
 function trim () { echo "removes spaces from the right side -- prototypes/functions.sh"; }
+function turn () { echo "moves everything into a new div -- prototypes/functions.sh"; }
+alias neck=turn
+alias fold=turn
+alias chomp=turn
 function github-clone { git clone "git@github.com:${@}.git"; }
