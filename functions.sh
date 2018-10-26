@@ -10,6 +10,7 @@ clayShy () { touch "$*" && clear; }
 step () { ls -1t; }
 # look everywhere in small repos like rotterdam
 gagrep () { grep -Rli "$@" *; }
+gaselect () { grep -Ri --binary-files=without-match "$@" *; }
 gafind () { find -iname "*$@*"; }
 allGit () { ls -d */.git | while read d; do d="${d%/.git}"; cd $d; git $@; cd ../; done }
 markupLintInPlace () {
