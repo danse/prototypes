@@ -23,11 +23,14 @@ notHidden = fileName /~? ".?*"
 -- isDirectory' :: FindClause Bool
 -- isDirectory' = (== Directory) <$> fileType
 
-filterPredicate :: FindClause Bool
-filterPredicate = notHidden -- &&? isDirectory' -- this does not filter as expected
+filterPredicate :: [String] -> FindClause Bool
+filterPredicate skip = notHidden &&? notSkip skip -- &&? isDirectory' -- this does not filter as expected
+  where notSkip [] = always
+        notSkip (a:b) = (fileName /~? a ) &&? notSkip b
 
 main = do
-  result <- fold filterPredicate folding Nothing "."
+  skip <- getArgs
+  result <- fold (filterPredicate skip) folding Nothing "."
   case result of
     Just info -> putStrLn (infoPath info)
     Nothing -> putStrLn "."
