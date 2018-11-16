@@ -17,7 +17,7 @@ cabal-version:       >=1.10
 
 executable tag
   main-is:             tag.hs
-  build-depends:       base >=4.8 && <4.9,
+  build-depends:       base >=4.11 && <4.12,
                        directory,
                        filepath,
                        unix,
@@ -26,13 +26,21 @@ executable tag
 
 executable group
   main-is:             group.hs
-  build-depends:       base >=4.8 && <4.9,
+  build-depends:       base >=4.11 && <4.12,
                        directory
   default-language:    Haskell2010
 
 executable nest
   main-is:             nest.hs
-  build-depends:       base >=4.8 && <4.9,
+  build-depends:       base >=4.11 && <4.12,
                        directory,
                        temporary
+  default-language:    Haskell2010
+
+executable clavado
+  main-is:             clavado.hs
+  build-depends:       base >=4.11 && <4.12,
+                       MissingH,
+                       filemanip,
+                       unix
   default-language:    Haskell2010

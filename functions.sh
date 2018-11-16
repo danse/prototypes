@@ -51,3 +51,4 @@ alias neck=turn
 alias fold=turn
 alias chomp=turn
 function github-clone { git clone "git@github.com:${@}.git"; }
+function clavado-wrapped { echo $(clavado) && cd $(clavado) && lt; }

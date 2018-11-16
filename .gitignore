@@ -1,3 +1,4 @@
 external
 Setup.hs
 dist/
+.stack-work/
