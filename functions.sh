@@ -49,6 +49,13 @@ function trim () { echo "removes spaces from the right side -- prototypes/functi
 function turn () { echo "moves everything into a new div -- prototypes/functions.sh"; }
 alias neck=turn
 alias fold=turn
-alias chomp=turn
+alias past=turn
 function github-clone { git clone "git@github.com:${@}.git"; }
 function clavado-wrapped { echo $(clavado) && cd $(clavado) && lt; }
+function net-reliability-meter {
+    cd /tmp/;
+    clear;
+    while sleep 10m; do date; done & ping amazon.com -f -i1;
+    kill %1;
+    cd -;
+}
