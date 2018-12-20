@@ -59,3 +59,4 @@ function net-reliability-meter {
     kill %1;
     cd -;
 }
+function pop() { cat "$@" && rm "$@"; }
