@@ -23,10 +23,10 @@ executable spawn
 
 executable cycle
   main-is:             cycle.hs
+  other-modules:       Prototypes
   build-depends:       base >=4.11 && <4.12,
                        open-browser,
-                       network-uri,
-                       strict
+                       network-uri
   default-language:    Haskell2010
 
 executable tag
@@ -58,3 +58,9 @@ executable clavado
                        filemanip,
                        unix
   default-language:    Haskell2010
+
+library
+  exposed-modules:     Prototypes
+  build-depends:       base, strict
+  default-language:    Haskell2010
+
