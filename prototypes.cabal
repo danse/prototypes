@@ -14,11 +14,10 @@ maintainer:          f.occhipinti@gmail.com
 build-type:          Simple
 cabal-version:       >=1.10
 
-executable spawn
-  main-is:             spawn.hs
-  build-depends:       base,
-                       open-browser,
-                       network-uri
+executable tac
+  main-is:             tac.hs
+  build-depends:       base, strict
+  other-modules:       Prototypes
   default-language:    Haskell2010
 
 executable cycle
@@ -28,6 +27,13 @@ executable cycle
                        open-browser,
                        network-uri,
                        strict
+  default-language:    Haskell2010
+
+executable spawn
+  main-is:             spawn.hs
+  build-depends:       base,
+                       open-browser,
+                       network-uri
   default-language:    Haskell2010
 
 executable tag
