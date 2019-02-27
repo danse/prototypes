@@ -1,3 +1,4 @@
+function grepHome () { grep -d skip $@ ~/*; }
 # install by adding a line like `source ~/prototypes/functions.sh` to
 # your `~/.bashrc`
 hakyllPostTitle () { echo $(date -Idate)-post-${1:-1}.md; }
