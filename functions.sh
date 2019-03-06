@@ -1,3 +1,4 @@
+function locateVisible () { locate $@ | grep -v "/\." ; }
 function grepHome () { grep -d skip $@ ~/*; }
 # install by adding a line like `source ~/prototypes/functions.sh` to
 # your `~/.bashrc`
