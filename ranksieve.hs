@@ -1,6 +1,8 @@
 import Data.List
 import Prototypes
 
+-- interface idea -- ranksieve --ranks 5
+
 -- >>> part 3 "some words"
 -- ["som","e w","ord","s"]
 part :: Int -> [a] -> [[a]]
