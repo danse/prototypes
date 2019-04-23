@@ -62,3 +62,4 @@ function net-reliability-meter {
     cd -;
 }
 function pop() { cat "$@" && rm "$@"; }
+function rankcount () { cat -b $@ | tail -n 3; }

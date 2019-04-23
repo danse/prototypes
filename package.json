@@ -17,6 +17,6 @@
   },
   "homepage": "https://github.com/danse/prototypes#readme",
   "dependencies": {
-    "serve": "^10.1.2"
+    "serve": "^11.0.0"
   }
 }
