@@ -14,26 +14,38 @@ link file dir = do
 
 data Options = Options {
   remove :: Bool,
-  tagPath :: FilePath,
+  tagPaths :: [FilePath],
   args :: [String]
   }
 
-singleTag tag file = do
+type File = String
+type Tag  = String
+
+data Feature = Feature Tag File
+
+features :: Feature -> IO ()
+features (Feature tag file) = do
   curr <- getCurrentDirectory
   link file (curr ++ "/tags/" ++ tag ++ "/")
+
+product :: [a] -> [b] -> [(a,b)]
+product a = (map (,) a <*>)
+
+multiple :: [Tag] -> [File] -> IO [()]
+multiple tags = sequence . map (features . uncurry Feature) . Main.product tags
 
 optionParser :: Parser Options
 optionParser = Options
                <$> switch (long "remove" <> short 'r')
-               <*> strOption (long "tag" <> short 't') -- you can use this option with an existing tag to benefit from prefix completion
+               <*> some (strOption (long "tag" <> short 't')) -- you can use this option with an existing tag to benefit from prefix completion
                <*> some (argument str (metavar "<file1> <file2> ... <tag>"))
 
 tag :: Options -> IO ()
 tag Options {..} = 
   let files = init args
-      tag = takePathEnd tagPath
+      tags = map takePathEnd tagPaths
   in do
-    sequence (map (singleTag tag) files)
+    multiple files tags
     if remove then sequence (map removeFile files) else pure [()]
     return ()
 
