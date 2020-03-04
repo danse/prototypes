@@ -1,4 +1,4 @@
-{-# LANGUAGE RecordWildCards #-}
+{-# LANGUAGE RecordWildCards, NamedFieldPuns #-}
 import System.Environment (getArgs)
 import System.Directory (createDirectoryIfMissing, copyFile, removeFile, getCurrentDirectory)
 import System.FilePath.Posix (takeFileName, splitPath)
@@ -7,49 +7,66 @@ import Data.Monoid( (<>) )
 import Control.Applicative( some )
 import Options.Applicative
 import Prototypes (takePathEnd)
+import Control.Exception (handle)
+import Control.Monad (join)
+import Tags (rootDir)
+
+type File   = String
+type Tag    = String
+type Report = String
+
+data Feature = Feature { tag::Tag, tagged::File }
+
+data Options = Options {
+  consume :: Bool,
+  dry :: Bool,
+  tagPaths :: [FilePath],
+  files :: [File]
+  }
+
+optionParser :: Parser Options
+optionParser = Options
+               <$> switch (long "consume" <> short 'c')
+               <*> switch (long "dry" <> short 'd')
+               <*> some (strOption (long "tag" <> short 't')) -- you can use this option with an existing tag to benefit from prefix completion
+               <*> some (argument str (metavar "<file1> <file2> ..."))
 
 link file dir = do
   createDirectoryIfMissing True dir
   createLink file (dir ++ "/" ++ (takeFileName file))
+  pure ("file "++ file ++" linked in "++ dir)
 
-data Options = Options {
-  remove :: Bool,
-  tagPaths :: [FilePath],
-  args :: [String]
-  }
-
-type File = String
-type Tag  = String
-
-data Feature = Feature Tag File
-
-features :: Feature -> IO ()
-features (Feature tag file) = do
+features :: Bool -> Feature -> IO Report
+features dry Feature { tagged, tag } = do
   curr <- getCurrentDirectory
-  link file (curr ++ "/tags/" ++ tag ++ "/")
+  if dry
+    then pure (tagged ++" features "++ tag)
+    else link tagged (curr ++ "/" ++ rootDir ++ "/" ++ tag ++ "/")
 
 product :: [a] -> [b] -> [(a,b)]
 product a = (map (,) a <*>)
 
-multiple :: [Tag] -> [File] -> IO [()]
-multiple tags = sequence . map (features . uncurry Feature) . Main.product tags
+multiple :: Bool -> [Tag] -> [File] -> [IO Report]
+multiple dry tags = map (features dry . uncurry Feature) . Main.product tags
 
-optionParser :: Parser Options
-optionParser = Options
-               <$> switch (long "remove" <> short 'r')
-               <*> some (strOption (long "tag" <> short 't')) -- you can use this option with an existing tag to benefit from prefix completion
-               <*> some (argument str (metavar "<file1> <file2> ... <tag>"))
+doConsume :: Bool -> [String] -> IO String
+doConsume dry files = if dry
+                    then pure ("consuming "++ join files)
+                    else do
+                        sequence (map removeFile files)
+                        pure ("removed "++ join files)
 
-tag :: Options -> IO ()
-tag Options {..} = 
-  let files = init args
-      tags = map takePathEnd tagPaths
+exe :: Options -> IO ()
+exe Options {..} = 
+  let tags = map takePathEnd tagPaths
   in do
-    multiple files tags
-    if remove then sequence (map removeFile files) else pure [()]
-    return ()
+    reports <- sequence $ multiple dry tags files
+    if consume
+      then doConsume dry files
+      else pure "preserving files"
+    putStrLn (unlines reports)
 
 optionParserInfo :: ParserInfo Options
 optionParserInfo = info optionParser fullDesc
 
-main = execParser optionParserInfo >>= tag
+main = execParser optionParserInfo >>= exe

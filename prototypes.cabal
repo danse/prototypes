@@ -14,33 +14,51 @@ maintainer:          f.occhipinti@gmail.com
 build-type:          Simple
 cabal-version:       >=1.10
 
-executable sieve
-  main-is:             sieve.hs
-  build-depends:       base, strict, parsec
-  other-modules:       Prototypes
+executable cards-vis-profile
+  main-is:             cards-vis-profile.hs
+  build-depends:       base, parsec
+  other-modules:       Cards
   default-language:    Haskell2010
 
-executable ranksieve
-  main-is:             ranksieve.hs
-  build-depends:       base, strict
+executable cards-evaluate
+  main-is:             cards-evaluate.hs
+  build-depends:       base, parsec
+  other-modules:       Cards
+  default-language:    Haskell2010
+
+executable cards-vis-slope
+  main-is:             cards-vis-slope.hs
+  build-depends:       base, parsec
+  other-modules:       Cards
+  default-language:    Haskell2010
+
+executable cards-sediment
+  main-is:             cards-sediment.hs
+  build-depends:       base, parsec
+  other-modules:       Cards
+  default-language:    Haskell2010
+
+executable ranks-5
+  main-is:             ranks-5.hs
+  build-depends:       base, strict, filepath
   other-modules:       Prototypes
   default-language:    Haskell2010
 
 executable zac
   main-is:             zac.hs
-  build-depends:       base, strict
+  build-depends:       base, strict, filepath
   other-modules:       Prototypes
   default-language:    Haskell2010
 
 executable monotone
   main-is:             monotone.hs
-  build-depends:       base, strict
+  build-depends:       base, strict, filepath
   other-modules:       Prototypes
   default-language:    Haskell2010
 
 executable tac
   main-is:             tac.hs
-  build-depends:       base, strict
+  build-depends:       base, strict, filepath
   other-modules:       Prototypes
   default-language:    Haskell2010
 
@@ -51,7 +69,19 @@ executable cycle
                        open-browser,
                        network-uri,
                        strict,
-                       optparse-applicative
+                       optparse-applicative,
+                       filepath
+  default-language:    Haskell2010
+
+executable cycle-drop
+  main-is:             cycle-drop.hs
+  other-modules:       Prototypes
+  build-depends:       base,
+                       open-browser,
+                       network-uri,
+                       strict,
+                       optparse-applicative,
+                       filepath
   default-language:    Haskell2010
 
 executable spawn
@@ -67,7 +97,33 @@ executable tag
                        directory,
                        filepath,
                        unix,
-                       optparse-applicative
+                       optparse-applicative,
+                       strict
+  other-modules:       Prototypes,
+                       Tags
+  default-language:    Haskell2010
+
+executable tag-ged-rename
+  main-is:             tag-ged-rename.hs
+  build-depends:       base,
+                       directory,
+                       filepath,
+                       unix,
+                       optparse-applicative,
+                       filemanip
+  other-modules:       Tags
+  default-language:    Haskell2010
+
+executable tag-ged-filter
+  main-is:             tag-ged-filter.hs
+  build-depends:       base,
+                       directory,
+                       filepath,
+                       unix,
+                       optparse-applicative,
+                       filemanip,
+                       containers
+  other-modules:       Tags
   default-language:    Haskell2010
 
 executable group
@@ -94,6 +150,24 @@ executable clavado
 library
   exposed-modules:     Prototypes
   build-depends:       base,
+                       filepath,
                        strict
   default-language:    Haskell2010
 
+library
+  exposed-modules:     Tags
+  build-depends:       base
+  default-language:    Haskell2010
+
+library
+  exposed-modules:     Cards
+  build-depends:       base,
+                       parsec
+  default-language:    Haskell2010
+
+test-suite doctests
+  type:          exitcode-stdio-1.0
+  ghc-options:   -threaded
+  main-is:       doctests.hs
+  build-depends: base,
+                 doctest
