@@ -44,12 +44,6 @@ executable ranks-5
   other-modules:       Prototypes
   default-language:    Haskell2010
 
-executable zac
-  main-is:             zac.hs
-  build-depends:       base, strict, filepath
-  other-modules:       Prototypes
-  default-language:    Haskell2010
-
 executable monotone
   main-is:             monotone.hs
   build-depends:       base, strict, filepath
@@ -91,47 +85,6 @@ executable spawn
                        network-uri
   default-language:    Haskell2010
 
-executable tag
-  main-is:             tag.hs
-  build-depends:       base,
-                       directory,
-                       filepath,
-                       unix,
-                       optparse-applicative,
-                       strict
-  other-modules:       Prototypes,
-                       Tags
-  default-language:    Haskell2010
-
-executable tag-ged-rename
-  main-is:             tag-ged-rename.hs
-  build-depends:       base,
-                       directory,
-                       filepath,
-                       unix,
-                       optparse-applicative,
-                       filemanip
-  other-modules:       Tags
-  default-language:    Haskell2010
-
-executable tag-ged-filter
-  main-is:             tag-ged-filter.hs
-  build-depends:       base,
-                       directory,
-                       filepath,
-                       unix,
-                       optparse-applicative,
-                       filemanip,
-                       containers
-  other-modules:       Tags
-  default-language:    Haskell2010
-
-executable group
-  main-is:             group.hs
-  build-depends:       base,
-                       directory
-  default-language:    Haskell2010
-
 executable nest
   main-is:             nest.hs
   build-depends:       base,
@@ -152,11 +105,6 @@ library
   build-depends:       base,
                        filepath,
                        strict
-  default-language:    Haskell2010
-
-library
-  exposed-modules:     Tags
-  build-depends:       base
   default-language:    Haskell2010
 
 library
