@@ -100,6 +100,15 @@ executable clavado
                        unix
   default-language:    Haskell2010
 
+
+executable oldest
+  main-is:             oldest.hs
+  -- other-modules:       
+  build-depends:       base,
+                       MissingH,
+                       filemanip,
+                       unix
+
 library
   exposed-modules:     Prototypes
   build-depends:       base,
