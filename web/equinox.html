@@ -1,0 +1,44 @@
+<script src="https://cdn.jsdelivr.net/npm/ramda@0.25/dist/ramda.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+<meta charset="UTF-8">
+<div id="root">
+ <button v-on:click="create">create</button>
+ <!--button v-on:click="sort">sort</button-->
+ <ul>
+  <li v-for="branch in branches">
+    <div>
+      <input v-model="branch.value" type="range" min="0" max="100"
+             v-on:change="sort"
+             />
+      <input v-model="branch.value" size="1"
+             v-on:change="sort"
+             />
+    </div>
+    <div>
+      <input v-model="branch.text" />
+    </div>
+  </li>
+ </ul>
+</div>
+<script>
+
+var root = new Vue({
+  el: "#root",
+  data: {
+    branches: []
+  },
+  methods: {
+    create: function () {
+      this.branches.unshift({
+        text: '',
+        value:0
+      });
+    },
+    sort: function () {
+      function byValue(a, b) { return Number(b.value) - Number(a.value); }
+      this.branches = this.branches.sort(byValue);
+    }
+  }
+})
+
+</script>

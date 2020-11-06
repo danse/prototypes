@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html manifest="manifest.appcache">
+  <head>
+    <meta charset="utf-8">
+    <link href="style.css" rel="stylesheet">
+    <title>tutorial</title>
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+  </head>
+  <body>
+    <div id="app">
+      <span v-bind:title="message">
+        Hover your mouse over me for a few seconds
+        to see my dynamically bound title!
+      </span>
+      <span v-if="seen">now you see me</span>
+      <ol>
+        <li v-for="meter in meters" :key="meter.name">
+          <input v-model="meter.name">
+          <input v-model="meter.value" type="number">
+          <input v-model="meter.value" type="range" min="0" max="120" step="1">
+        </li>
+      </ol>
+    </div>
+    <script>
+
+var app = new Vue({
+ el: '#app',
+ data: {
+  message: 'You loaded this page on ' + new Date().toLocaleString(),
+  seen: true,
+  meters: [{ name: "pit", value: 0 }, { name: "questions", value: 5 }],
+ }
+})
+
+    </script>
+  </body>
+</html>

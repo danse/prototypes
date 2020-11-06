@@ -6,6 +6,7 @@ pop() { cat "$@" && rm "$@"; }
 push(){ echo >> "$1" && cat >> "$1"; }
 gagrep () { grep -Rli "$@" *; }
 gafind () { find -iname "*$@*"; }
+stick () { echo "$1" >> ~/.stick; }
 grepHome () { grep -d skip $@ ~/*; }
 pour () { mv "$1"/* . && rmdir "$1"; }
 rankcount () { cat -b $@ | tail -n 3; }
