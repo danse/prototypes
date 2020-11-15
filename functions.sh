@@ -24,11 +24,6 @@ stef() { s=$(step | tail -n1) && cat "$s" && touch "$s" && echo "\ $s"; }
 slight () { t=/tmp/$(date -Iseconds); mkdir "$t" && mv * "$t"; mv "$t" "$1"; }
 turn () { echo "moves everything into a new div -- prototypes/functions.sh"; }
 trim () { echo "remove spaces on the right side -- prototypes/functions.sh"; }
-tag-overlaps-find () { find "$1"/* | while read f; do tag-ged-find "$f"; done }
-tag-root-clone () { ls "$1/tags" | while read tag; do mkdir -p "tags/$tag"; done; }
-tag-overlaps () { tag-overlaps-find "$1" | cut -d "/" -f 3 | sort | uniq -c | sort -rn ; }
-tag-root-merge () { echo "functions.sh"; } # ls "$1/tags" | while read tag; do cp "$1/tags/$tag/*" "$2/tags/$tag"; done; }
-tag-ged-find () { find . -samefile "$1" 2> /dev/null; } # https://unix.stackexchange.com/questions/201920/how-to-find-all-hard-links-to-a-given-file
 
 allGit () {
     ls -d */.git | while read d
@@ -56,25 +51,12 @@ abs() {
     echo $ABS_PATH
 } # from http://jeetworks.org/node/98
 
-tag-ged-stats () {
-    ls tags/ | while read t
-    do echo -n "$t "
-       ls "tags/$t" | wc -l
-    done | sort -nr -k 2
-}
-
 alias neck=turn
 alias fold=turn
 alias past=turn
 alias density=sieve
 alias sediment=sieve
 alias cave="runhaskell ~/lab/prototypes/cave.hs"
-
-tag-ged-remove () {
-    h=$(pwd)
-    n=$(basename $1)
-    rm -v $h/tags/*/"$n";
-}
 
 markupLintInPlace () {
     xmllint --format "$@" > /tmp/formatted && mv /tmp/formatted "$@"
