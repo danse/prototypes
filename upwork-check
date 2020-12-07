@@ -1,2 +1,0 @@
-#!/bin/bash
-cd ~/franco-opwer/ && . daily-check.sh && . common\ selection\ .sh ; cd
