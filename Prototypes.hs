@@ -5,17 +5,11 @@ import System.IO (
   hClose,
   hPutStr,
   hFlush,
-  hClose,
   IOMode(..))
 import qualified System.IO.Strict as Strict
 
-pipeThrough :: (String -> String) -> IO ()
-pipeThrough f = do
-  contents <- getContents
-  putStr (f contents)
-
 pipeLinesThrough :: ([String] -> [String]) -> IO ()
-pipeLinesThrough f = pipeThrough (unlines . f . lines)
+pipeLinesThrough f = interact (unlines . f . lines)
 
 fileApply :: FilePath -> (String -> (String, a)) -> IO a
 fileApply fileName f = do

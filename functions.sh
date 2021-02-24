@@ -1,8 +1,9 @@
 
 # install by adding a line like `source ~/prototypes/functions.sh` to your `~/.bashrc`
 
-step () { ls -1t; }
-pop() { cat "$@" && rm "$@"; }
+del(){ mv "$@" /tmp; }
+stepShow () { ls -1t; }
+pop() { cat "$@" && del "$@"; }
 push(){ echo >> "$1" && cat >> "$1"; }
 gagrep () { grep -Rli "$@" *; }
 gafind () { find -iname "*$@*"; }
@@ -20,7 +21,6 @@ fileAndForget () { gitSave && git push origin HEAD; clear; }
 clavado-wrapped () { echo $(clavado) && cd $(clavado) && lt; }
 map () { local f="$1"; shift; while read a; do "$f" $a; done; }
 fileAndForgetShy () { gitSaveShy && git push origin HEAD; clear; }
-stef() { s=$(step | tail -n1) && cat "$s" && touch "$s" && echo "\ $s"; }
 slight () { t=/tmp/$(date -Iseconds); mkdir "$t" && mv * "$t"; mv "$t" "$1"; }
 turn () { echo "moves everything into a new div -- prototypes/functions.sh"; }
 trim () { echo "remove spaces on the right side -- prototypes/functions.sh"; }
@@ -38,7 +38,7 @@ allGit () {
 net-reliability-meter() {
     cd /tmp/;
     clear;
-    while sleep 10m; do date; done & ping amazon.com -f -i1;
+    while sleep 10m; do date; done & ping google.com -f -i1;
     kill %-;
     cd -;
 }
