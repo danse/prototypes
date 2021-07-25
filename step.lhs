@@ -35,28 +35,21 @@ isVisible p = head p /= '.'
 
 \end{code}
 
-We select the file in the current directory that was modified least recently. If it points to a directory, we move there and try again
+Touching visited directories, we select the file in the current directory that was modified least recently
 
 \begin{code}
 
 latestModified :: FileInfo -> IO (Maybe FileInfo)
 latestModified (WithPrefix path, _) = do
+  touchFile path
   paths <- listDirectory path
   candidates <- mapM (addModification . (path </>)) (filter isVisible paths)
   return $ if null candidates
     then Nothing
-    else Just (head (sortOn snd candidates))
+    else Just $ head (sortOn snd candidates)
 
-\end{code}
-
-When testing our best candidate we also touch it so that it will not be picked by the next step
-
-\begin{code}
-
-touchDoesDirectoryExist :: FileInfo -> IO Bool
-touchDoesDirectoryExist (WithPrefix path, _) = do
-  touchFile path
-  doesDirectoryExist path
+doesInfoDirectoryExist :: FileInfo -> IO Bool
+doesInfoDirectoryExist (WithPrefix path, _) = doesDirectoryExist path
 
 \end{code}
 
@@ -98,7 +91,7 @@ iterateMWhile iterating predicate initial = do
 main :: IO ()
 main = do
   a <- getModificationTime "."
-  (WithPrefix path, time) <- iterateMWhile latestModified touchDoesDirectoryExist (WithPrefix ".", a)
+  (WithPrefix path, time) <- iterateMWhile latestModified doesInfoDirectoryExist (WithPrefix ".", a)
   eitherContents <- try (readFile path) :: IO (Either IOError String)
   putStrLn $ either show (filePreview path time) eitherContents
 
