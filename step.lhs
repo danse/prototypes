@@ -39,9 +39,8 @@ We select the file in the current directory that was modified least recently. If
 
 \begin{code}
 
-latestModified :: Maybe FileInfo -> IO (Maybe FileInfo)
-latestModified Nothing = return Nothing
-latestModified (Just (WithPrefix path, _)) = do
+latestModified :: FileInfo -> IO (Maybe FileInfo)
+latestModified (WithPrefix path, _) = do
   paths <- listDirectory path
   candidates <- mapM (addModification . (path </>)) (filter isVisible paths)
   return $ if null candidates
@@ -54,9 +53,8 @@ When testing our best candidate we also touch it so that it will not be picked b
 
 \begin{code}
 
-doesMaybeDirectoryExist :: Maybe FileInfo -> IO Bool
-doesMaybeDirectoryExist Nothing = return False
-doesMaybeDirectoryExist (Just (WithPrefix path, _)) = do
+touchDoesDirectoryExist :: FileInfo -> IO Bool
+touchDoesDirectoryExist (WithPrefix path, _) = do
   touchFile path
   doesDirectoryExist path
 
@@ -66,10 +64,9 @@ We print the first ten lines of the file. If the file is shorter than ten lines 
 
 \begin{code}
 
-filePreview :: FilePath -> (Either IOError String) -> UTCTime -> String
-filePreview path eitherContents time = either show preview eitherContents
-  where preview = onLines (flip snoc (path <> " " <> show time) . t . f)
-        onLines f = unlines . f . lines
+filePreview :: FilePath -> UTCTime -> String -> String
+filePreview path time = onLines (flip snoc (path <> " " <> show time) . t . f)
+  where onLines f = unlines . f . lines
         f = filter (not . null) 
         t l = if length l < previewSize
             then (snoc l decorator)
@@ -87,22 +84,22 @@ filePreview path eitherContents time = either show preview eitherContents
 
 \begin{code}
 
-iterateMWhile :: Monad m => (a -> m a) -> (a -> m Bool) -> a -> m a
+iterateMWhile :: Monad m => (a -> m (Maybe a)) -> (a -> m Bool) -> a -> m a
 iterateMWhile iterating predicate initial = do
   pass <- predicate initial
   if pass
-    then iterating initial >>= \ next -> iterateMWhile iterating predicate next
+    then do
+      maybeNext <- iterating initial
+      case maybeNext of
+        Nothing -> return initial
+        Just next -> iterateMWhile iterating predicate next
     else return initial
 
 main :: IO ()
 main = do
   a <- getModificationTime "."
-  maybeOld <- iterateMWhile latestModified doesMaybeDirectoryExist (Just (WithPrefix ".", a))
-  preview <- case maybeOld of
-    Nothing -> pure "Empty or hidden directory"
-    Just  (WithPrefix path, time) -> do
-        eitherContents <- try (readFile path)
-        pure $ filePreview path eitherContents time
-  putStrLn preview
+  (WithPrefix path, time) <- iterateMWhile latestModified touchDoesDirectoryExist (WithPrefix ".", a)
+  eitherContents <- try (readFile path) :: IO (Either IOError String)
+  putStrLn $ either show (filePreview path time) eitherContents
 
 \end{code}
