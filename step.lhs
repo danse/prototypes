@@ -77,21 +77,22 @@ filePreview path time = onLines (flip snoc (path <> " " <> show time) . t . f)
 
 \begin{code}
 
-iterateMWhile :: Monad m => (a -> m (Maybe a)) -> (a -> m Bool) -> a -> m a
-iterateMWhile iterating predicate initial = do
-  pass <- predicate initial
+iterateWhileExists :: (FileInfo -> IO (Maybe FileInfo)) -> FileInfo -> IO FileInfo
+iterateWhileExists iterating initial = do
+  pass <- doesInfoDirectoryExist initial
   if pass
     then do
       maybeNext <- iterating initial
       case maybeNext of
         Nothing -> return initial
-        Just next -> iterateMWhile iterating predicate next
+        Just next -> iterateWhileExists iterating next
     else return initial
 
 main :: IO ()
 main = do
   a <- getModificationTime "."
-  (WithPrefix path, time) <- iterateMWhile latestModified doesInfoDirectoryExist (WithPrefix ".", a)
+  let start = (WithPrefix ".", a)
+  (WithPrefix path, time) <- iterateWhileExists latestModified start
   eitherContents <- try (readFile path) :: IO (Either IOError String)
   putStrLn $ either show (filePreview path time) eitherContents
 
