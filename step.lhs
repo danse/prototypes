@@ -66,25 +66,20 @@ We print the first ten lines of the file. If the file is shorter than ten lines 
 
 \begin{code}
 
-showFilePreview :: Maybe FileInfo -> IO String
-showFilePreview Nothing = return "Empty or hidden directory"
-showFilePreview (Just (WithPrefix path, time)) = do
-  eitherContents <- try (readFile path) :: IO (Either IOError String)
-  let l' = either (const ["Cannot show file"]) lines eitherContents
-      l = filter (not . null) l'
-      d = if length l < previewSize
+filePreview :: FilePath -> (Either IOError String) -> UTCTime -> String
+filePreview path eitherContents time = either show preview eitherContents
+  where preview = onLines (flip snoc (path <> " " <> show time) . t . f)
+        onLines f = unlines . f . lines
+        f = filter (not . null) 
+        t l = if length l < previewSize
             then (snoc l decorator)
             else take previewSize l
-    in return (unlines (snoc d (path <> " " <> show time)))
-
-snoc :: [a] -> a -> [a]
-snoc l e = l <> [e]
-
-previewSize :: Int
-previewSize = 10
-
-decorator :: String
-decorator = replicate 80 '_'
+        snoc :: [a] -> a -> [a]
+        snoc l e = l <> [e]
+        previewSize :: Int
+        previewSize = 10
+        decorator :: String
+        decorator = replicate 80 '_'
 
 \end{code}
 
@@ -103,7 +98,11 @@ main :: IO ()
 main = do
   a <- getModificationTime "."
   maybeOld <- iterateMWhile latestModified doesMaybeDirectoryExist (Just (WithPrefix ".", a))
-  preview  <- showFilePreview maybeOld
+  preview <- case maybeOld of
+    Nothing -> pure "Empty or hidden directory"
+    Just  (WithPrefix path, time) -> do
+        eitherContents <- try (readFile path)
+        pure $ filePreview path eitherContents time
   putStrLn preview
 
 \end{code}
