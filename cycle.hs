@@ -1,10 +1,11 @@
-{-# LANGUAGE NamedFieldPuns #-}
+{-# LANGUAGE RecordWildCards #-}
 import Web.Browser (openBrowser)
 import Network.URI (isURI)
 import Control.Monad (void)
 import Prototypes (fileApply)
 import Options.Applicative
 import Data.Semigroup ((<>))
+import Data.Maybe (listToMaybe, fromMaybe)
 
 data Options = Options {
   fileNames :: [String],
@@ -18,33 +19,29 @@ options = Options
           <*> option auto (long "times" <> help "how many elements do you want to cycle?" <> showDefault <> value 1 <> metavar "TIMES")
           <*> option auto (long "plain" <> help "print also web addresses rather than opening with a browser" <> showDefault <> value False)
 
-headOrError [] = "the file is empty"
-headOrError o  = head o
-
-shift []    = []
-shift (h:t) = t ++ [h]
 
 popAndShift :: String -> (String, String)
 popAndShift contents = (unlines (shift l), headOrError l)
-  where l = lines contents
+  where
+    l = lines contents
+    shift []    = []
+    shift (h:t) = t <> [h]
+    headOrError = fromMaybe "the file is empty" . listToMaybe
 
-cycle_ :: Bool -> String -> Int -> IO ()
-cycle_ plain fileName index = do
-  popped <- fileApply fileName popAndShift
-  if isURI popped && not plain then void (openBrowser popped)
-    else putStrLn popped
-  where withPref l = "https://" ++ l
-
-combinations :: Options -> [(String, Int)]
--- every filename appears in a combination
-combinations (Options { fileNames, times })
- | l < times = zip c [1..times]
- | otherwise = zip c [1..l]
- where l = length fileNames
-       c = cycle fileNames
+-- | every filename appears in a combination
+-- >>> cycleNames ["a", "b"] 5
+-- ["a","b","a","b","a"]
+cycleNames :: [String] -> Int -> [String]
+cycleNames names times = take times $ cycle names
 
 main = do
-  opt <- execParser (info (options <**> helper) fullDesc)
-  sequence (map2 (cycle_ (plain opt)) (combinations opt))
-  where map2 :: (a -> b -> c) -> [(a,b)] -> [c]
-        map2 f l = map (\ (a,b) -> f a b) l
+  Options{..} <- execParser (info (options <**> helper) fullDesc)
+  sequence $ doCycle plain <$> cycleNames fileNames times
+  where
+    doCycle :: Bool -> String -> IO ()
+    doCycle plain fileName = do
+      popped <- fileApply fileName popAndShift
+      if isURI popped && not plain then void (openBrowser popped)
+        else putStrLn popped
+      where withPref l = "https://" ++ l
+
