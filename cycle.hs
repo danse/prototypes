@@ -44,4 +44,3 @@ main = do
       if isURI popped && not plain then void (openBrowser popped)
         else putStrLn popped
       where withPref l = "https://" ++ l
-
