@@ -4,6 +4,7 @@ import Network.URI (isURI)
 import Control.Monad (void)
 import Prototypes (fileApply)
 import Options.Applicative
+import Data.Bool (bool)
 import Data.Semigroup ((<>))
 import Data.Maybe (listToMaybe, fromMaybe)
 
@@ -41,6 +42,10 @@ main = do
     doCycle :: Bool -> String -> IO ()
     doCycle plain fileName = do
       popped <- fileApply fileName popAndShift
-      if isURI popped && not plain then void (openBrowser popped)
-        else putStrLn popped
-      where withPref l = "https://" ++ l
+      let withPref p = if '.' `elem` p then "https://" <> p else p
+          open = void . openBrowser
+          openOr :: (String -> IO ()) -> String -> IO ()
+          openOr action s = bool (action s) (open s) (isURI s)
+      if plain
+        then putStrLn popped
+        else openOr (openOr putStrLn . withPref) popped
