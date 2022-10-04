@@ -7,6 +7,7 @@ pop() { cat "$@" && del "$@"; }
 push(){ echo >> "$1" && cat >> "$1"; }
 gagrep () { grep -Rli "$@" *; }
 gafind () { find -iname "*$@*"; }
+backup () { cp "$@" "$@.backup"; }
 stick () { echo "$1" >> ~/.stick; }
 grepHome () { grep -d skip $@ ~/*; }
 pour () { mv "$1"/* . && rmdir "$1"; }
