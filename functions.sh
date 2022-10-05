@@ -13,6 +13,7 @@ grepHome () { grep -d skip $@ ~/*; }
 pour () { mv "$1"/* . && rmdir "$1"; }
 rankcount () { cat -b $@ | tail -n 3; }
 gitSaveShy () { git commit -am "$(date)"; }
+nodeBins () { PATH=$PATH:node_modules/.bin/; }
 locateVisible () { locate $@ | grep -v "/\." ; }
 gitSave () { git add -A && git commit -m "$(date)"; }
 github-clone () { git clone "git@github.com:${@}.git"; }
